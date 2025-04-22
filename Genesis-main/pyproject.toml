@@ -1,0 +1,129 @@
+[build-system]
+requires = ["setuptools", "wheel", "cython>=3.0.0", "numpy>=1.26.4"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# name = "genesis-world-nightly"
+# version = "0.0.3"
+name = "genesis-world"
+version = "0.2.1"
+description = "A universal and generative physics engine"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "psutil",
+    "taichi >= 1.7.2",
+    "pydantic == 2.7.1",
+    "numpy >= 1.26.4",
+    "trimesh",
+    "scipy >= 1.14",
+    "libigl",
+    # * Mujoco 3.3 made Native CCD an opt-out option instead of opt-in,
+    #   which requires setting the disableflags 'mjDSBL_NATIVECCD'.
+    "mujoco >= 3.3.0, < 3.4.0",
+    "moviepy >= 2.0.0",
+    # Used by `pyrender` to manage onscreen graphical windows
+    "pyglet>=1.5",
+    # Used by `pyrender` to load fonts
+    "freetype-py",
+    # Used by `pyrender` to write low-level OpenGL rendering pipeline
+    "PyOpenGL>=3.1.4",
+    # Use by `pyrender` to compile low-level OpenGL rendering pipeline
+    "numba",
+    # Use by `Mesh.remesh`, which is involve in `PBDTetEntity.sample`
+    "pymeshlab",
+    # Optional `trimesh` dependency for loading `.dae` mesh files
+    "pycollada",
+    # Used for parsing `.glb` mesh files
+    "pygltflib == 1.16.0",
+    # Use by `PBD3DEntity.sample` to tetrahedralize a mesh
+    "tetgen >= 0.6.4",
+    # Used for some advanced mesh processing such as `skeletonization`
+    "PyGEL3D",
+    # Use to display camera images
+    "opencv-python",
+    # Use by `RigidGeom.visualize_sdf` to render SDF as level 0 marching cubes
+    "scikit-image",
+    # Convex decomposition library
+    "coacd",
+    # Used for loading raytracing special texture images used by LuisaRender
+    "OpenEXR",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["genesis", "genesis.*"]
+
+[tool.setuptools.package-data]
+genesis = [
+    "assets/*",
+    "ext/pyrender/fonts/*",
+    "ext/pyrender/shaders/*",
+    "ext/VolumeSampling",
+]
+
+[tool.black]
+line-length = 120
+force-exclude = '''
+/(
+    genesis/ext
+)/
+'''
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+    "--pdbcls=IPython.terminal.debugger:TerminalPdb",
+    "--exitfirst",
+    "--numprocesses=auto",
+    "--random-order-bucket=global",
+    "--random-order-seed=0",
+    "--durations=0",
+    "--durations-min=20.0",
+    "-m not benchmarks",
+]
+filterwarnings = [
+    "ignore::_pytest.warning_types.PytestUnknownMarkWarning",
+    "ignore::DeprecationWarning",
+]
+markers = [
+    "benchmarks: marks benchmarks (executed independently and sequentially).",
+]
+log_cli_level = "WARNING"
+
+[project.scripts]
+gs = "genesis._main:main"
+
+[project.optional-dependencies]
+gen = [
+    "openai",
+]
+dev = [
+    "black",
+    "pytest",
+    "pytest-xdist",
+    "pytest-random-order",
+    "huggingface_hub",
+]
+docs = [
+    # Note that currently sphinx 7 does not work, so we must use v6.2.1. See https://github.com/kivy/kivy/issues/8230 which tracks this issue. Once fixed we can use a later version
+    "sphinx==6.2.1",
+    "sphinx-autobuild",
+    "pydata_sphinx_theme",
+    # For spelling
+    "sphinxcontrib.spelling",
+    # Type hints support
+    "sphinx-autodoc-typehints",
+    # Copy button for code snippets
+    "sphinx_copybutton",
+    # Markdown parser
+    "myst-parser",
+    "sphinx-subfigure",
+    "sphinxcontrib-video",
+    "sphinx-togglebutton",
+    "sphinx_design",
+]
+render = [
+    "pybind11[global]",
+    "open3d",
+]

@@ -1,0 +1,7 @@
+setup.py
+dial_mpc.egg-info/PKG-INFO
+dial_mpc.egg-info/SOURCES.txt
+dial_mpc.egg-info/dependency_links.txt
+dial_mpc.egg-info/entry_points.txt
+dial_mpc.egg-info/requires.txt
+dial_mpc.egg-info/top_level.txt

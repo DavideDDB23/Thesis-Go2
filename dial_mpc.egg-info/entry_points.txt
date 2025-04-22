@@ -1,0 +1,2 @@
+[console_scripts]
+dial-mpc = tesi.dial_mpc.core.dial_core:main
