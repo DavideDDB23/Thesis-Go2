@@ -59,10 +59,10 @@ class UnitreeGo2Env(BaseEnv):
         # move gait definitions to the correct device
         for k, v in self._gait_phase.items():
             self._gait_phase[k] = v.to(self.device)
-            
         for k, v in self._gait_params.items():
             self._gait_params[k] = v.to(self.device)
 
+        # Get initial and default poses
         self._init_q = self.robot.get_qpos()
         self._default_pose = self.robot.get_qpos()[7:]
 
